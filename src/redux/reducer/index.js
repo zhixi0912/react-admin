@@ -4,16 +4,23 @@
  */
 import {type} from "../action";
 const initalState = {
-    menuName: "11"
+    menuName: ["/home"]
 }
 
 const ebikeData = (state = initalState,action)=>{
     switch (action.type) {
         case type.SWITCH_MENU:
+        {
             return {
                 ...state,
                 menuName: action.menuName
             }
+        }
+        default:
+            return {
+                ...state
+            }
+
     }
 }
 

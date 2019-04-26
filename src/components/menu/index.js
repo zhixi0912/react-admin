@@ -2,27 +2,43 @@ import React from 'react'
 import './index.less'
 import {Menu, Icon} from "antd";
 import {NavLink} from 'react-router-dom'
+import {switchMenu} from '../../redux/action'
+import Store from '../../redux/store'
 import MenuConfig from './menuConfig'
 const SubMenu = Menu.SubMenu;
 
 export default class Menus extends React.Component{
     state = {
-        curSelectedMenuKey:[]
+        curSelectedMenuKey:[],
+
     }
+    componentDidMount() {
+
+    }
+
     componentWillMount(){
+        let curSelectedMenuKey = ['/home']
+        // let key = Store.getState(switchMenu())
+        // console.log("1",key.menuName)
+        Store.dispatch(switchMenu(curSelectedMenuKey)) //存入全局状态管理
         let menuList = this.readerMenu(MenuConfig)
-        this.setState({menuTreeNode:menuList})
+        this.setState({
+            menuTreeNode:menuList,
+            curSelectedMenuKey:curSelectedMenuKey
+        })
+
     }
-    onMenuClick = (key) =>{
-        let breadcrumb = key.key;
+    onMenuClick = (e ) =>{
+        let breadcrumb = e.key;
         // breadcrumb = key.key.split("/");
+        console.log("key---999--",e)
         this.setState({
             curSelectedMenuKey:[breadcrumb]
         })
-        console.log("11111111",breadcrumb)
+        Store.dispatch(switchMenu([breadcrumb])) //存入全局状态管理
+        // console.log("11111111",)
 
 
-        console.log("2222222",breadcrumb)
     }
     readerMenu = (data)=>{
         return  data.map((item)=>{
@@ -54,7 +70,6 @@ export default class Menus extends React.Component{
     render() {
         return (
             <Menu theme="light"
-                  defaultSelectedKeys={['/home']}
                   selectedKeys={this.state.curSelectedMenuKey}
                   mode="inline"
                   onClick={this.onMenuClick}
